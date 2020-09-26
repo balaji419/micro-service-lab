@@ -26,6 +26,7 @@ stages:
               effectivePomSkip: false
               sonarQubeRunAnalysis: false
               findBugsRunAnalysis: true
+              goals: 'package'
           - task: Maven@3
             inputs:
               mavenPomFile: 'calc-service/pom.xml'
