@@ -14,7 +14,11 @@ stages:
         pool:
          vmImage: 'ubuntu-latest'
         steps:
-          
+          - task: SonarCloudPrepare@1
+            inputs:
+              SonarCloud: 'microservices'
+              organization: 'gitbubbals'
+              scannerMode: 'Other'
           - task: Maven@3
             inputs:
               mavenPomFile: 'calc-service/pom.xml'
@@ -26,6 +30,9 @@ stages:
               mavenAuthenticateFeed: false
               effectivePomSkip: false
               sonarQubeRunAnalysis: false
+          - task: SonarCloudPublish@1
+            inputs:
+              pollingTimeoutSec: '300'
           - task: CopyFiles@2
             inputs:
               SourceFolder: '$(agent.builddirectory)'
