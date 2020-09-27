@@ -18,18 +18,6 @@ stages:
           - task: Maven@3
             inputs:
               mavenPomFile: 'calc-service/pom.xml'
-              publishJUnitResults: true
-              testResultsFiles: '**/surefire-reports/TEST-*.xml'
-              javaHomeOption: 'JDKVersion'
-              mavenVersionOption: 'Default'
-              mavenAuthenticateFeed: false
-              effectivePomSkip: false
-              sonarQubeRunAnalysis: false
-              findBugsRunAnalysis: true
-              goals: 'package'
-          - task: Maven@3
-            inputs:
-              mavenPomFile: 'calc-service/pom.xml'
               goals: 'verify'
               publishJUnitResults: true
               testResultsFiles: '**/surefire-reports/TEST-*.xml'
