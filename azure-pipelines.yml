@@ -43,4 +43,9 @@ stages:
               PathtoPublish: '$(Build.ArtifactStagingDirectory)'
               ArtifactName: 'drop'
               publishLocation: 'Container'
-
+          - task: SendMessage@1
+            inputs:
+              awsCredentials: 'Bals_aws_durk'
+              regionName: 'us-east-1'
+              message: 'hai dude this is from azure'
+              topicArn: 'arn:aws:sns:us-east-1:177400249537:codestar-notifications-greetings'
