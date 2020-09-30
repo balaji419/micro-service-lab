@@ -5,14 +5,15 @@
 
 trigger:
 - master
-
+variables:
+  buildConfiguration: 'Release'
 
 stages:
   - stage: Build
     jobs:
       - job: Mavenjob
         pool:
-         vmImage: 'ubuntu-latest'
+          vmImage: 'ubuntu-latest'
         steps:
           - task: SonarCloudPrepare@1
             inputs:
@@ -49,3 +50,32 @@ stages:
               regionName: 'us-east-1'
               message: 'hai dude this is from azure'
               topicArn: 'arn:aws:sns:us-east-1:177400249537:codestar-notifications-greetings'
+  - stage: 'deploy'
+    displayName: "deploy yo to webservice"
+    dependsOn: Build
+    jobs: 
+    
+    - deployment: Deploy 
+      variables:
+        - group: Release
+      pool:
+        vmImage: 'ubuntu-18.04'
+      environment: dev
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - task: DownloadBuildArtifacts@0
+              inputs:
+                buildType: 'current'
+                downloadType: 'single'
+                artifactName: 'drop'
+                downloadPath: '$(System.ArtifactsDirectory)'
+ 
+            - task: AzureWebApp@1
+              displayName: 'Azure App Service Deploy: website'
+              inputs:
+                azureSubscription: 'Free Trial(35592fcc-f495-4015-8cb8-d1080f32afc6)'
+                appType: 'webAppLinux'
+                appName: '$(webappname)'
+                package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
